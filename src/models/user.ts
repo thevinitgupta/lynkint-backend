@@ -1,6 +1,7 @@
-import mongoose, { Mongoose, Schema } from "mongoose";
+import mongoose, { Model, Mongoose, Schema } from "mongoose";
+import {UserInterface} from "../types/user";
 
-const userSchema = new Schema({
+const userSchema : Schema = new Schema({
     email : {
         type : String,
         required : true
@@ -13,14 +14,17 @@ const userSchema = new Schema({
         password : {
             type : String,
             required : true,
+            select : false 
         },
         salt : {
-            type : String
+            type : String,
+            select : false 
         },
         sessionToken : {
-            type : String
+            type : String,
+            select : false 
         },
-        select : false // this defines that while returning the response, password is not returned
+        // this defines that while returning the response, password is not returned
     },
 });
 

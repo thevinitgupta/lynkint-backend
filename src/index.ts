@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import { configDotenv } from "dotenv";
 import connectDB from "./connections/db";
+import userController from "./controllers/user";
 
 const app = express();
 
@@ -21,7 +22,7 @@ app.use(bodyParser.json());
 
 connectDB();
 const db = mongoose.connection;
-
+app.get("/users", userController.get);
 db.once("open", ()=>{
     console.log("MongoDB connection established!")
     app.listen(3003, ()=>{
