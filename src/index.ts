@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import { configDotenv } from "dotenv";
 import connectDB from "./connections/db";
-import userController from "./controllers/user";
+import router from "./router";
 
 const app = express();
 
@@ -14,7 +14,7 @@ app.use(cors({
     credentials : true
 }));
 
-configDotenv();
+require('dotenv').config()
 
 app.use(compression());
 app.use(cookieParser());
@@ -22,7 +22,9 @@ app.use(bodyParser.json());
 
 connectDB();
 const db = mongoose.connection;
-app.get("/users", userController.get);
+
+app.use("/", router);
+
 db.once("open", ()=>{
     console.log("MongoDB connection established!")
     app.listen(3003, ()=>{
