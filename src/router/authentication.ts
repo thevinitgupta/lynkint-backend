@@ -4,4 +4,5 @@ import authenticationController from "../controllers/authentication";
 
 export default (router : express.Router) => {
     router.post('/auth/register', authenticationController.signup);
+    router.post('/auth/login', authenticationController.login);
 }

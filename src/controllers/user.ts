@@ -6,7 +6,7 @@ import { maskPassword, random } from '../utils/authentication';
 const userController = {
     get : async (_req : Request ,res : Response )=>{
         try {
-            const users : Array<UserInterface> = await userModel.find();
+            const users : Array<UserInterface> = await userModel.find({},{authentication : false});
             
             res.status(200).json({
                 users

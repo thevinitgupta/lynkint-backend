@@ -1,14 +1,15 @@
 
 import {Request, Response} from 'express';
 import { userModel } from '../models/user';
-import { maskPassword, random } from '../utils/authentication';
+import { generateJWTToken, maskPassword, random } from '../utils/authentication';
 import { validateEmail } from '../utils/validator';
+import { UserInterface } from '../types/user';
 const authenticationController = {
     signup : async (req : Request, res : Response) => {
         const { email , name, password } = req.body;
         if(!email || !password || !name) {
             return res.status(400).json({
-                message : 'Email or Password missing'
+                message : 'Email/Password/Name missing'
             });
         }
         if(!validateEmail(email)){
@@ -46,7 +47,47 @@ const authenticationController = {
             });
         }
     },
-    login : (req : Request, res : Response) =>{
+    login : async (req : Request, res : Response) =>{
+        const {email, password} = req.body;
+        if(!email || !password) {
+            return res.status(400).json({
+                message : 'Email or Password missing'
+            });
+        }
+        if(!validateEmail(email)){
+            return res.status(400).json({
+                message : 'Invalid Email'
+            });
+        }
+        try {
+            const user = await userModel.findOne({email});
+            if(!user){
+                return res.status(400).json({
+                    message : 'Email does not exist'
+                });
+            }
+            else {
+                const salt = user.authentication.salt;
+                const hashedPassword = maskPassword(salt, password);
+                if(hashedPassword!=user.authentication.password){
+                    return res.send(403).json({
+                        message : "Invalid Password"
+                    });
+                }
+                const userData = {
+                    ...user.toJSON()
+                };
+                delete userData.authentication;
+                const token = await generateJWTToken(userData);
+                res.cookie("token",token, {
+                    httpOnly : true
+                });
+
+                res.redirect("/user")
+            }
+        } catch (error) {
+            
+        }
 
     }
 }

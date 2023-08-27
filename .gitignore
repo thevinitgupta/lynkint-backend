@@ -66,6 +66,9 @@ web_modules/
 .env.production.local
 .env.local
 
+#private-keys files
+*.key
+
 # Nuxt.js build / generate output
 .nuxt
 dist
