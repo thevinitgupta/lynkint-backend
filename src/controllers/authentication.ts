@@ -2,7 +2,7 @@
 import {Request, Response} from 'express';
 import { userModel } from '../models/user';
 import { generateJWTToken, maskPassword, random } from '../utils/authentication';
-import { validateEmail } from '../utils/validator';
+import { validateEmail, validatePassword } from '../utils/validator';
 import { UserInterface } from '../types/user';
 const authenticationController = {
     signup : async (req : Request, res : Response) => {
@@ -15,6 +15,11 @@ const authenticationController = {
         if(!validateEmail(email)){
             return res.status(400).json({
                 message : 'Invalid Email'
+            });
+        }
+        else if(!validatePassword(password)){
+            return res.status(400).json({
+                message : 'Invalid password'
             });
         }
         //check for existing account with the same email address
