@@ -4,7 +4,7 @@ import {  UserInterface } from '../types/user';
 import { validateEmail } from "../utils/validator";
 import { maskPassword, random } from '../utils/authentication';
 const userController = {
-    getByEmail : async (req : Request & {user : any} ,res : Response )=>{
+    getByEmail : async (req : Request ,res : Response )=>{
         try {
             const { email } = req.user;
             

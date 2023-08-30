@@ -3,7 +3,7 @@ import {Request, Response} from 'express';
 import { userModel } from '../models/user';
 import { generateJWTToken, maskPassword, random } from '../utils/authentication';
 import { validateEmail, validatePassword } from '../utils/validator';
-import { UserInterface } from '../types/user';
+
 const authenticationController = {
     signup : async (req : Request, res : Response) => {
         const { email , name, password } = req.body;
@@ -40,7 +40,8 @@ const authenticationController = {
                     salt
                 }
             });
-            const savedNewUser = await newUser.save();
+            const savedNewUser = await (await newUser.save()).toJSON();
+            savedNewUser["authentication"] = null;
             return res.status(200).json({
                 message : "New User Created Successfully",
                 user : savedNewUser
