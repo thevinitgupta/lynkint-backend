@@ -84,14 +84,19 @@ const authenticationController = {
                 };
                 delete userData.authentication;
                 const token = await generateJWTToken(userData);
-                res.cookie("token",token, {
+                res.cookie("lynkit-token",token, {
                     httpOnly : true
                 });
-
-                res.redirect("/user")
+                console.log("cookie Set")
+                res.status(201).json({
+                    message : "Loggin Successful"
+                });
             }
         } catch (error) {
-            
+            console.log(error);
+            return res.status(500).json({
+                message : error.message
+                });
         }
 
     }

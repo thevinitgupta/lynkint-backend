@@ -16,6 +16,7 @@ export const maskPassword = (salt : string, password : string) : string => {
 // jwt token generator
 export const generateJWTToken = async (user : object) => {
     const jwtSecret = process.env.JWT_PRIVATE_KEY;
+    console.log(jwtSecret)
     console.log(user)
     try {
         const jwtToken = await jwt.sign(JSON.stringify(user), jwtSecret);

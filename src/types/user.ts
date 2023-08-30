@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import Document from "mongoose";
 export interface AuthInterface {
     password : string,
