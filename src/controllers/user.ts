@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import { userModel } from "../models/user";
+import { UserModel } from "../models/user";
 import {  UserInterface } from '../types/user';
 import { validateEmail } from "../utils/validator";
 import { maskPassword, random } from '../utils/authentication';
@@ -18,7 +18,7 @@ const userController = {
                     message : 'Invalid Email'
                 });
             }
-            const user : Array<UserInterface> = await userModel.find({email},{authentication : false});
+            const user : Array<UserInterface> = await UserModel.find({email},{authentication : false});
             if(!user){
                 return res.status(404).json({
                     message : "User with email not found"

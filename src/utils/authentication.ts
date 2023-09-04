@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { UserInterface } from "types/user";
-import { userModel } from '../models/user';
+import { UserModel } from '../models/user';
 const SECRET = "Lynkit-API-SECRET";
 
 //randomizer function to generate salt

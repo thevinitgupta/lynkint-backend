@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { userModel } from "../models/user";
+import { UserModel } from "../models/user";
 import {
   generateJWTToken,
   maskPassword,
@@ -26,7 +26,7 @@ const authenticationController = {
         throw new CustomError("Invalid password", 400, "Validation Error", {});
       }
       //check for existing account with the same email address
-      const userExists = await userModel.findOne({ email });
+      const userExists = await UserModel.findOne({ email });
       if (userExists) {
         throw new CustomError(
           "Email Already Exists",
@@ -37,7 +37,7 @@ const authenticationController = {
       }
       const salt = random();
       const hashedPassword = maskPassword(salt, password);
-      const newUser = new userModel({
+      const newUser = new UserModel({
         email,
         name,
         authentication: {
@@ -74,7 +74,7 @@ const authenticationController = {
       } else if (!validatePassword(password)) {
         throw new CustomError("Invalid password", 400, "Validation Error", {});
       }
-      const user = await userModel.findOne({ email });
+      const user = await UserModel.findOne({ email });
       if (!user) {
         throw new CustomError(
           "Email does not exist",

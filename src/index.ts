@@ -26,6 +26,7 @@ const db = mongoose.connection;
 
 app.use("/", router);
 app.use(errorHandler);
+
 db.once("open", ()=>{
     console.log("MongoDB connection established!")
     app.listen(3003, ()=>{
