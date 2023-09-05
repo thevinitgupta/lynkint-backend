@@ -43,7 +43,6 @@ const lynkController = {
                 throw new CustomError(`User does not exist`,403,'Credential Error');
             }
             const lynks = await LynkModel.find({
-                email : email,
                 userId : _id
             });
             console.log(lynks);

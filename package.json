@@ -4,7 +4,8 @@
   "description": "Link shortner backend with Typescript",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon",
+    "start": "tsc && node dist/main.js",
+    "dev": "tsc -w & nodemon -q -w dist dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -27,7 +28,6 @@
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.2",
-    "@types/nanoid": "^3.0.0",
     "body-parser": "^1.20.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
@@ -37,6 +37,6 @@
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.4",
-    "uuid": "^9.0.0"
+    "nanoid": "^3.3.6"
   }
 }

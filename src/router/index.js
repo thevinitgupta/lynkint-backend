@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = require("express");
+var authentication_1 = require("./authentication");
+var user_1 = require("./user");
+var lynk_1 = require("./lynk");
+var router = express_1.default.Router();
+(0, authentication_1.default)(router);
+(0, user_1.default)(router);
+(0, lynk_1.default)(router);
+exports.default = router;

@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
-import { UserInterface } from "types/user";
+import { UserInterface } from "../types/user";
 import { UserModel } from '../models/user';
 const SECRET = "Lynkit-API-SECRET";
 

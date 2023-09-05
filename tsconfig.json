@@ -1,11 +1,18 @@
 {
-    "compilerOptions" : {
-        "module": "Node16",
-        "moduleResolution": "node",
-        "baseUrl": "src",
-        "outDir": "dist",
-        "sourceMap": true,
-        "noImplicitAny": true,
-    },
-    "include": ["src/**/*", "src/types/express.d.ts"]
+  "compilerOptions": {
+    "target": "ESNext", // Specify the target JavaScript version
+    "module": "CommonJS", // Specify the module system (CommonJS for Node.js)
+    "outDir": "./dist", // Output directory for compiled JavaScript files
+    "rootDir": "./src",
+    "moduleResolution": "node",
+    // "baseUrl": "src",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "allowJs": true
+  },
+  "include": ["src/**/*", "src/types/express.d.ts"],
+  "exclude": [
+    "node_modules" // Exclude files in the node_modules directory
+  ]
 }

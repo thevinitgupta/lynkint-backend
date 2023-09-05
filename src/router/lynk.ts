@@ -4,5 +4,6 @@ import lynkController from "../controllers/lynk";
 import jwtAuthHandler from "../middlewares/jwtToken";
 
 export default (router : express.Router) => {
-    router.get('/user', jwtAuthHandler ,lynkController.getUserLinks);
+    router.post('/lynk/create', jwtAuthHandler ,lynkController.create);
+    router.get('/lynk', jwtAuthHandler ,lynkController.getUserLinks);
 }

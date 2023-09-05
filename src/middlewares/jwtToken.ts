@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { Response, NextFunction, Request } from 'express';
-import { IUser } from "types/express";
+import { IUser } from "../types/express";
 
 const jwtAuthHandler = async (req : Request, res : Response, next : NextFunction) => {
     const token = req.cookies["lynkit-token"];
