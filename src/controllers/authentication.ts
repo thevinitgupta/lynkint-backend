@@ -63,7 +63,7 @@ const authenticationController = {
     try {
       if (!email || !password) {
         throw new CustomError(
-          "Email/Password/Name missing",
+          "Email/Password missing",
           400,
           "Credential Error",
           {}
@@ -100,6 +100,7 @@ const authenticationController = {
         const token = await generateJWTToken(userData);
         res.cookie("lynkit-token", token, {
           httpOnly: true,
+          expires : new Date(new Date().getTime() + 30*24*60*60*1000)
         });
         console.log("cookie Set");
         res.status(201).json({

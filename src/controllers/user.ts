@@ -6,8 +6,8 @@ import { maskPassword, random } from '../utils/authentication';
 const userController = {
     getByEmail : async (req : Request ,res : Response )=>{
         try {
-            const { email } = req.user;
-            
+            // const { email } = req.user;
+            const email = "thevinitgupta@gmail.com";
             if(!email) {
                 return res.status(400).json({
                     message : 'Email missing, Login Again!'
