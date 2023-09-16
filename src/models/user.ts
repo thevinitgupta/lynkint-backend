@@ -22,6 +22,10 @@ const userSchema : Schema = new Schema({
         },
         // this defines that while returning the response, password is not returned
     },
+    verified : {
+        type : Boolean,
+        default : false
+    }
 });
 
 export const UserModel = mongoose.model("User", userSchema);

@@ -104,7 +104,46 @@ const authenticationController = {
         });
         console.log("cookie Set");
         res.status(201).json({
-          message: "Loggin Successful",
+          data: "Loggin Successful",
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+  logout: async (req: Request, res: Response, next: NextFunction) => {
+    const { email} = req.user;
+    try {
+      if (!email) {
+        throw new CustomError(
+          "Email Missing",
+          400,
+          "Credential Error",
+          {}
+        );
+      }
+      if (!validateEmail(email)) {
+        throw new CustomError("Invalid Email", 400, "Validation Error", {});
+      }
+      const user = await UserModel.findOne({ email });
+      if (!user) {
+        throw new CustomError(
+          "Email does not exist",
+          400,
+          "Credential Error",
+          {}
+        );
+      } else {
+       
+        const userData = {
+          ...user.toJSON(),
+        };
+        delete userData.authentication.sessionToken;
+        await user.save();
+        res.status(200)
+        .clearCookie("lynkit-token")
+        .json({
+          data: "Logout Successful",
         });
       }
     } catch (error) {

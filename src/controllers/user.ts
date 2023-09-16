@@ -6,8 +6,8 @@ import { maskPassword, random } from '../utils/authentication';
 const userController = {
     getByEmail : async (req : Request ,res : Response )=>{
         try {
-            // const { email } = req.user;
-            const email = "thevinitgupta@gmail.com";
+            const { email } = req.user;
+            // const email = "thevinitgupta@gmail.com";
             if(!email) {
                 return res.status(400).json({
                     message : 'Email missing, Login Again!'
@@ -26,7 +26,7 @@ const userController = {
             }
             return res.status(200).json({
                 message : "User found",
-                user
+                user : user[0]
             });
         } catch (error) {
             console.log(error)
