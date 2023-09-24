@@ -10,11 +10,15 @@ import router from "./router";
 import errorHandler from "./middlewares/errorHandler";
 
 const app = express();
+const corsOptions = {
+    origin: "http://localhost:5173",
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    credentials: true,
+}
 
-app.use(cors({
-    credentials : true,
-    origin : "http://localhost:5173"
-}));
+app.use(cors(corsOptions));
 
 require('dotenv').config()
 
@@ -28,9 +32,9 @@ const db = mongoose.connection;
 app.use("/", router);
 app.use(errorHandler);
 
-db.once("open", ()=>{
+db.once("open", () => {
     console.log("MongoDB connection established!")
-    app.listen(3003, ()=>{
+    app.listen(3003, () => {
         console.log("server listening on port 3003✅✅");
     });
 });

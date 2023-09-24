@@ -8,12 +8,13 @@ import { validateEmail} from "../utils/validator";
 const lynkController = {
     create : async (req : Request, res : Response, next : NextFunction) =>{
         const {email, _id, name} = req.user;
+        console.log(req.body)
         const {link} = req.body;
         try{
             if(!email || !_id || !validateEmail(email)){
                 throw new CustomError("Invalid Credentials, Login Again", 401, "Validation Error",{});
             }
-            const user = await (await UserModel.findById(_id, {authentication : false})).toJSON();
+            const user = await (await UserModel.findById(_id, {authentication : false}))?.toJSON();
             if(!user){
                 throw new CustomError(`User does not exist`,403,'Credential Error');
             }
@@ -27,7 +28,7 @@ const lynkController = {
             if(!savedLynk){
                 throw new CustomError("Lynk not created", 500, 'Database Error');
             }
-            return res.status(201).json({"message" :"Lynk Created Successfully"});
+            return res.status(201).json({"message" :"Lynk Created Successfully", data : lynk.shortLynk});
         }catch(error){
             next(error);
         }
