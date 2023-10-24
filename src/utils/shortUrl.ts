@@ -2,11 +2,21 @@ import { CustomError } from "../models/custom-error.model";
 import {nanoid} from "nanoid/async"
 
 
-export const shortUrlGenerator = async (size: number = 7): Promise<string> => {
+interface urlGenInterface {
+  shortLynk : string,
+  shortId : string
+}
+
+
+export const shortUrlGenerator = async (size: number = 7): Promise<urlGenInterface> => {
   try {
     const baseUrl = process.env.BASE_URL;
-    const shortUrl = await nanoid(size);
-   return `${baseUrl}/${shortUrl}`;
+    const shortId = await nanoid(size);
+    const shortLynk = `${baseUrl}/${shortId}`
+   return {
+    shortLynk,
+    shortId
+   };
   } catch (error) {
     console.log(error);
     throw new CustomError(

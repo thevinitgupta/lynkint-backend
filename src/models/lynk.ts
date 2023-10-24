@@ -9,6 +9,10 @@ const lynkSchema = new Schema({
         type: String ,
         required : true
     },
+    shortId :{
+        type: String ,
+        required : true
+    },
     originalLynk : {
         type:String,
         required : true

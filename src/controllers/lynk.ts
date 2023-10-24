@@ -18,10 +18,11 @@ const lynkController = {
             if(!user){
                 throw new CustomError(`User does not exist`,403,'Credential Error');
             }
-            const shortLynk = await shortUrlGenerator(7);
+            const {shortLynk, shortId} = await shortUrlGenerator(7);
             const lynk = new LynkModel({
                 userId : user._id, 
                 shortLynk,
+                shortId,
                 originalLynk : link,
             });
             const savedLynk = await lynk.save();
@@ -49,7 +50,7 @@ const lynkController = {
             console.log(lynks);
             res.status(200).json({
                 message : "Lynks Found",
-                data: lynks
+                lynks: lynks
             })
         }catch(error){
             next(error);
