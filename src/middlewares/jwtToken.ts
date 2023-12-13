@@ -6,23 +6,30 @@ import { CustomError } from "../models/custom-error.model";
 const jwtAuthHandler = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
-        const token = req.cookies["lynkit-token"];
-        console.log("authHandler cookie Token", token)
-        if(!token){
+        const authHeader = req.headers['authorization'];
+        console.log("\n\n",authHeader, "\n\n")
+        if(!authHeader) {
             throw new CustomError(
-                "JWT Token Not found",
-                404,
-                "Token Error",
+                "Access Token Not found",
+                401,
+                "Credential Error",
                 {}
               );
         }
+
+        const accessToken = authHeader.split(' ')[1];
+        const refreshToken = req.cookies["lynkit-token"];
+        console.log("authHandler cookie Token", refreshToken)
         const secret = process.env.JWT_PRIVATE_KEY;
-        console.log("jwt secret", secret);
-        const user = await jwt.verify(token, process.env.JWT_PRIVATE_KEY, { algorithms: ['HS256'] });
+        // console.log("jwt secret", secret);
+        const user = await jwt.verify(accessToken, process.env.JWT_PRIVATE_KEY, { algorithms: ['HS256'] });
         if (!user) {
-            return res.status(400).json({
-                message: "Invalid Credentials"
-            });
+            throw new CustomError(
+                "User Forbidden",
+                403,
+                "Credential Error",
+                {}
+              );
         }
         req.user = user as IUser;
         console.log("METHOD : ", req.method, ", url : ", req.url);

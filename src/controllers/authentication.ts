@@ -96,15 +96,29 @@ const authenticationController = {
         const userData = {
           ...user.toJSON(),
         };
-        delete userData.authentication;
-        const token = await generateJWTToken(userData);
-        res.cookie("lynkit-token", token, {
+
+        const payload = {
+          name : userData.name,
+          email : userData.email,
+          _id : userData._id
+        }
+
+        const jwtSecret = process.env.JWT_PRIVATE_KEY;
+        const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
+        if(!jwtSecret || !refreshSecret) {
+          throw new CustomError("Error Creating Tokens",500, 'Token Error');
+        }
+        const accessToken = await generateJWTToken(payload, jwtSecret, "3h");
+        const refreshToken = await generateJWTToken(payload, refreshSecret, "1d");
+        console.log("access token : ", accessToken, "\nrefresh token : ",refreshToken)
+        res.cookie("lynkit-token", refreshToken, {
           httpOnly: true,
           expires : new Date(new Date().getTime() + 30*24*60*60*1000)
         });
         console.log("cookie Set");
         res.status(201).json({
           data: "Loggin Successful",
+          token : accessToken
         });
       }
     } catch (error) {

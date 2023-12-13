@@ -25,6 +25,10 @@ const userSchema : Schema = new Schema({
     verified : {
         type : Boolean,
         default : false
+    },
+    refreshToken : {
+        type : String,
+        default : ""
     }
 });
 

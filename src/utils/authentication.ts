@@ -14,12 +14,13 @@ export const maskPassword = (salt : string, password : string) : string => {
 }
 
 // jwt token generator
-export const generateJWTToken = async (user : object) => {
-    const jwtSecret = process.env.JWT_PRIVATE_KEY;
-    console.log(jwtSecret)
-    console.log(user)
+export const generateJWTToken = async (payload : object, secret : string, expiry : string) => {
+    
+    // console.log(jwtSecret)
+    // console.log(user)
     try {
-        const jwtToken = await jwt.sign(JSON.stringify(user), jwtSecret);
+        // Please note that exp is only set if the payload is an object literal.
+        const jwtToken = await jwt.sign(payload, secret, { expiresIn : expiry});
         return jwtToken;
     } catch (error) {
         if(error instanceof JsonWebTokenError ){
@@ -28,5 +29,6 @@ export const generateJWTToken = async (user : object) => {
         else{
             console.log(error);
         }
+        return null;
     }
 }
