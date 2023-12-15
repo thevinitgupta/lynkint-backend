@@ -14,7 +14,7 @@ const userController = {
                 });
             }
             if(!validateEmail(email)){
-                return res.status(400).json({
+                return res.status(401).json({
                     message : 'Invalid Email'
                 });
             }

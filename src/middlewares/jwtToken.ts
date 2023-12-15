@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { Response, NextFunction, Request } from 'express';
 import { IUser } from "../types/express";
 import { CustomError } from "../models/custom-error.model";
@@ -18,8 +18,8 @@ const jwtAuthHandler = async (req: Request, res: Response, next: NextFunction) =
         }
 
         const accessToken = authHeader.split(' ')[1];
-        const refreshToken = req.cookies["lynkit-token"];
-        console.log("authHandler cookie Token", refreshToken)
+        // const refreshToken = req.cookies["lynkit-token"];
+        console.log("authHandler cookie Token", accessToken)
         const secret = process.env.JWT_PRIVATE_KEY;
         // console.log("jwt secret", secret);
         const user = await jwt.verify(accessToken, process.env.JWT_PRIVATE_KEY, { algorithms: ['HS256'] });

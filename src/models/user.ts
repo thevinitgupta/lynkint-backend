@@ -17,9 +17,6 @@ const userSchema : Schema = new Schema({
         salt : {
             type : String,
         },
-        sessionToken : {
-            type : String,
-        },
         // this defines that while returning the response, password is not returned
     },
     verified : {
