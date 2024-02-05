@@ -1,0 +1,2 @@
+# Lynkit Backend
+> In addition, something I've discovered, you should store failed login attempts for invalid usernames as well. If you only ever lockout failed attempts on valid usernames, then you are revealing which usernames are valid which is a no-no.

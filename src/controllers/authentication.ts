@@ -7,6 +7,7 @@ import {
 } from "../utils/authentication";
 import { validateEmail, validatePassword } from "../utils/validator";
 import { CustomError, ErrorType } from "../models/custom-error.model";
+import getRedisClient from "../connections/redis-client";
 
 const authenticationController = {
   signup: async (req: Request, res: Response, next: NextFunction) => {
@@ -60,7 +61,14 @@ const authenticationController = {
   },
   login: async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
+    //extracting ip address from AddressInfo : {address, port, family}
+    const ipObject = req.socket.address() as { address: string, port: number, family: string };
+    const ipAddress = ipObject.address
+    console.log("ip :", ipAddress);
+    const client = await getRedisClient();
+
     try {
+
       if (!email || !password) {
         throw new CustomError(
           "Email/Password missing",
@@ -72,6 +80,7 @@ const authenticationController = {
       if (!validateEmail(email)) {
         throw new CustomError("Invalid Email", 400, "Validation Error", {});
       } else if (!validatePassword(password)) {
+
         throw new CustomError("Invalid password", 400, "Validation Error", {});
       }
       const user = await UserModel.findOne({ email });
@@ -86,6 +95,25 @@ const authenticationController = {
         const salt = user.authentication.salt;
         const hashedPassword = await maskPassword(salt, password);
         if (hashedPassword != user.authentication.password) {
+          const requestsMade = await client.incr(ipAddress)
+          let ttl = -1;
+          if (requestsMade === 1) {
+            await client.expire(ipAddress, 60);
+            ttl = 60;
+          }
+          else {
+            ttl = await client.ttl(ipAddress);
+          }
+          if (requestsMade > 5) {
+            throw new CustomError(
+              "Too many attemps",
+              503,
+              "Validation Error",
+              {
+                ttl
+              });
+          }
+          console.log("Requests made till now : ", requestsMade);
           throw new CustomError(
             "Wrong Password",
             400,
@@ -97,30 +125,32 @@ const authenticationController = {
           ...user.toJSON(),
         };
 
+        await client.del(ipAddress);
+
         const payload = {
-          name : userData.name,
-          email : userData.email,
-          _id : userData._id
+          name: userData.name,
+          email: userData.email,
+          _id: userData._id
         }
 
         const jwtSecret = process.env.JWT_PRIVATE_KEY;
         const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
-        if(!jwtSecret || !refreshSecret) {
-          throw new CustomError("Error Creating Tokens",500, 'Token Error');
+        if (!jwtSecret || !refreshSecret) {
+          throw new CustomError("Error Creating Tokens", 500, 'Token Error');
         }
         const accessToken = await generateJWTToken(payload, jwtSecret, "1h");
         const refreshToken = await generateJWTToken(payload, refreshSecret, "1d");
-        console.log("access token : ", accessToken, "\nrefresh token : ",refreshToken)
+        console.log("access token : ", accessToken, "\nrefresh token : ", refreshToken)
         user.refreshToken = refreshToken;
         await user.save();
         res.cookie("lynkit-token", refreshToken, {
-          httpOnly: true,
-          expires : new Date(new Date().getTime() + 30*24*60*60*1000)
+          httpOnly: true, // secure : true for https (in production)
+          expires: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000)
         });
         console.log("cookie Set");
         res.status(201).json({
           data: "Loggin Successful",
-          token : accessToken
+          token: accessToken
         });
       }
     } catch (error) {
@@ -128,7 +158,7 @@ const authenticationController = {
     }
   },
   logout: async (req: Request, res: Response, next: NextFunction) => {
-    const { email} = req.user;
+    const { email } = req.user;
     try {
       if (!email) {
         throw new CustomError(
@@ -150,17 +180,17 @@ const authenticationController = {
           {}
         );
       } else {
-       
+
         const userData = {
           ...user.toJSON(),
         };
         user.refreshToken = "";
         await user.save();
         res.status(200)
-        .clearCookie("lynkit-token")
-        .json({
-          data: "Logout Successful",
-        });
+          .clearCookie("lynkit-token")
+          .json({
+            data: "Logout Successful",
+          });
       }
     } catch (error) {
       next(error);

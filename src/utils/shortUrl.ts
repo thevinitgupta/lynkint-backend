@@ -12,7 +12,7 @@ export const shortUrlGenerator = async (size: number = 7): Promise<urlGenInterfa
   try {
     const baseUrl = process.env.BASE_URL;
     const shortId = await nanoid(size);
-    const shortLynk = `${baseUrl}/${shortId}`
+    const shortLynk = `${baseUrl}/t?o=${shortId}`
    return {
     shortLynk,
     shortId

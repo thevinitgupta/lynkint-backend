@@ -1,4 +1,4 @@
-export type ErrorType = 'Validation Error' |'Token Error' | 'Server Error' | 'Database Error' | 'Credential Error';
+export type ErrorType = 'Validation Error' |'Token Error' | 'Server Error' | 'Database Error' | 'Credential Error' | 'Data Missing';
 export class CustomError {
     status : number;
     message : string;
