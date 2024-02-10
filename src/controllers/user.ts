@@ -18,7 +18,7 @@ const userController = {
                     message : 'Invalid Email'
                 });
             }
-            const user : Array<UserInterface> = await UserModel.find({email},{authentication : false});
+            const user : Array<UserInterface> = await UserModel.find({email},{authentication : false, refreshToken : false});
             if(!user){
                 return res.status(404).json({
                     message : "User with email not found"

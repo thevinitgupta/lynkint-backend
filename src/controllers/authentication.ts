@@ -65,9 +65,9 @@ const authenticationController = {
     const ipObject = req.socket.address() as { address: string, port: number, family: string };
     const ipAddress = ipObject.address
     console.log("ip :", ipAddress);
-    const client = await getRedisClient();
-
+    
     try {
+      const client = await getRedisClient(next);
 
       if (!email || !password) {
         throw new CustomError(

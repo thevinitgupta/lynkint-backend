@@ -1,6 +1,8 @@
 import { createClient } from 'redis';
+import { CustomError } from '../models/custom-error.model';
+import { NextFunction } from 'express';
 
-const getRedisClient = () => {
+const getRedisClient = (next : NextFunction) => {
 
 let password = "", host = "", port = -1, client = null;
 try {
@@ -8,6 +10,7 @@ try {
     password = process.env.REDIS_PASSWORD;
     host = process.env.REDIS_URL;
     port = parseInt(process.env.REDIS_PORT);
+    console.log(host, port)
     if(Number.isNaN(port)) throw new Error("Invalid PORT")
     client = createClient({
         password: password,
@@ -15,10 +18,16 @@ try {
             host: host,
             port: port
         }
-    }).on('error', err => console.log('Redis Client Error', err))
-    .connect();
+    })
+    
+    client.on('error', err => {
+        console.log('Redis Client Error', err);
+        throw new CustomError("Redis Client Error", 500, 'Database Error', err)
+    })
+    if(!client.isOpen)
+        client.connect();
 } catch (error) {
-    console.log(error)
+    next(error);
 }
     return client;
 }

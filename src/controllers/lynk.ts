@@ -48,9 +48,10 @@ const lynkController = {
                 userId : _id
             });
             console.log(lynks);
+            
             res.status(200).json({
                 message : "Lynks Found",
-                lynks: lynks
+                lynks: lynks.length===0 ? null : lynks
             })
         }catch(error){
             next(error);
